@@ -42,7 +42,7 @@ public class OrderService implements OrderServiceInterface {
     @Override
     public Order saveOrder(Order order) {
         Map<String, String> customerValidate = restTemplate.getForObject(customerUrl + "customers/validate/{id}", Map.class, order.getCustomerId());
-        double price = 0;
+        double price = -1;
         if (Objects.nonNull(customerValidate)) {
             Double productValidate = restTemplate.getForObject(productUrl + "/products/validate/{name}/{quantity}", Double.class, order.getProductName(), order.getQuantity());
             if (Objects.nonNull(productValidate)) {
@@ -53,12 +53,15 @@ public class OrderService implements OrderServiceInterface {
                 price = restTemplate.getForObject(productUrl + "/products/" + order.getProductName() + "/price", Double.class);
             }
         }
-        OrderEvent orderEvent = new OrderEvent();
-        orderEvent.setCustomerId(order.getCustomerId());
-        orderEvent.setProductName(order.getProductName());
-        orderEvent.setQuantity(order.getQuantity());
-        orderEvent.setPrice(price);
-        streamBridge.send("test-port", orderEvent);
+        if(price > 0)
+        {
+            OrderEvent orderEvent = new OrderEvent();
+            orderEvent.setCustomerId(order.getCustomerId());
+            orderEvent.setProductName(order.getProductName());
+            orderEvent.setQuantity(order.getQuantity());
+            orderEvent.setPrice(price);
+            streamBridge.send("test-port", orderEvent);
+        }
         return orderRepository.save(order);
     }
 
