@@ -70,6 +70,8 @@ public class Order {
                 "orderId=" + orderId +
                 ", supplier='" + supplier + '\'' +
                 ", quantity=" + quantity +
+                ", productName='" + productName + '\'' +
+                ", customerId=" + customerId +
                 '}';
     }
 }

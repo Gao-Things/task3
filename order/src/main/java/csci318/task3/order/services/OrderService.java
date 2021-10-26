@@ -44,25 +44,24 @@ public class OrderService implements OrderServiceInterface {
         Map<String, String> customerValidate = restTemplate.getForObject(customerUrl + "customers/validate/{id}", Map.class, order.getCustomerId());
         double price = -1;
         if (Objects.nonNull(customerValidate)) {
-            Double productValidate = restTemplate.getForObject(productUrl + "/products/validate/{name}/{quantity}", Double.class, order.getProductName(), order.getQuantity());
+            Double productValidate = restTemplate.getForObject(productUrl + "/products/validate/{name}/{quantity}", Double.class,
+                                                                order.getProductName(), order.getQuantity());
             if (Objects.nonNull(productValidate)) {
                 Map<String, Object> requestBody = new HashMap<>();
                 requestBody.put("name", order.getProductName());
                 requestBody.put("quantity", order.getQuantity());
                 restTemplate.put(productUrl + "/products/update-quantity/", requestBody);
                 price = restTemplate.getForObject(productUrl + "/products/" + order.getProductName() + "/price", Double.class);
+                OrderEvent orderEvent = new OrderEvent();
+                orderEvent.setCustomerId(order.getCustomerId());
+                orderEvent.setProductName(order.getProductName());
+                orderEvent.setQuantity(order.getQuantity());
+                orderEvent.setPrice(price);
+                streamBridge.send("test-port", orderEvent);
+                return orderRepository.save(order);
             }
         }
-        if(price > 0)
-        {
-            OrderEvent orderEvent = new OrderEvent();
-            orderEvent.setCustomerId(order.getCustomerId());
-            orderEvent.setProductName(order.getProductName());
-            orderEvent.setQuantity(order.getQuantity());
-            orderEvent.setPrice(price);
-            streamBridge.send("test-port", orderEvent);
-        }
-        return orderRepository.save(order);
+        return null;
     }
 
     @Override
