@@ -1,0 +1,17 @@
+server.port: 3004
+spring.cloud.stream:
+  bindings:
+    consume-in-0:
+      destination: xx-topic
+  kafka.binder:
+    configuration:
+      commit.interval.ms: 1000
+    brokers: localhost:9092
+    serdeError: logAndContinue
+  kafka.bindings:
+    consume-in-0:
+      consumer:
+        configuration:
+          default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+          default.value.serde: org.springframework.kafka.support.serializer.JsonSerde
+          spring.json.trusted.packages: '*'
