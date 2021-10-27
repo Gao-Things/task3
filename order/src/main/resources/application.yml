@@ -1,6 +1,6 @@
 spring.cloud.stream:
   bindings:
-    test-port:
+    OrderEvent-out:
       destination: OrderEvent
   kafka.binder:
     configuration:

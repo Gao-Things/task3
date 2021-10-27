@@ -57,7 +57,7 @@ public class OrderService implements OrderServiceInterface {
                 orderEvent.setProductName(order.getProductName());
                 orderEvent.setQuantity(order.getQuantity());
                 orderEvent.setPrice(price);
-                streamBridge.send("test-port", orderEvent);
+                streamBridge.send("OrderEvent", orderEvent);
                 return orderRepository.save(order);
             }
         }

@@ -29,7 +29,7 @@ public class OrderApplication {
 				boolean flag = true;
 				System.out.println("start");
 				while (flag){
-					Order order = new Order((long)(Math.random() * 5 + 1), TestProductName.getName
+					Order order = new Order(10L, TestProductName.getName
 												((int)(Math.random() * 5 + 1)), (long)(Math.random() * 5 + 1));
 					Order returnedOrder = restTemplate.postForObject(url, order, Order.class);
 					System.out.println(returnedOrder);
