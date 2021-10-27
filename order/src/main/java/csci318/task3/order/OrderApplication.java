@@ -29,8 +29,8 @@ public class OrderApplication {
 				boolean flag = true;
 				System.out.println("start");
 				while (flag){
-					Order order = new Order(TestSupplier.getName((int)(Math.random() * 5 + 1)), (long)(Math.random() * 5 + 1),
-											TestProductName.getName((int)(Math.random() * 5 + 1)), (long)(Math.random() * 5 + 1));
+					Order order = new Order((long)(Math.random() * 5 + 1), TestProductName.getName
+												((int)(Math.random() * 5 + 1)), (long)(Math.random() * 5 + 1));
 					Order returnedOrder = restTemplate.postForObject(url, order, Order.class);
 					System.out.println(returnedOrder);
 					if(returnedOrder == null)
@@ -45,33 +45,6 @@ public class OrderApplication {
 		};
 	}
 
-}
-
-enum TestSupplier{
-	ProductSupplier1("Test Supplier Name 1",1),
-	ProductSupplier2("Test Supplier Name 2",2),
-	ProductSupplier3("Test Supplier Name 3",3),
-	ProductSupplier4("Test Supplier Name 4",4),
-	ProductSupplier5("Test Supplier Name 5",5);
-
-	private final String name;
-	private final int index;
-	TestSupplier(String name, int index) {
-		this.name = name;
-		this.index = index;
-	}
-	public static String getName(int index) {
-		for (TestSupplier s : TestSupplier.values()) {
-			if (s.getIndex() == index) {
-				return s.name;
-			}
-		}
-		return null;
-	}
-
-	public int getIndex() {
-		return index;
-	}
 }
 
 enum TestProductName{

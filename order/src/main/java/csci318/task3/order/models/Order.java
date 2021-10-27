@@ -10,7 +10,6 @@ public class Order {
     @Column(nullable = false)
     private Long orderId;
 
-    private String supplier;
     private Long quantity;
     private String productName;
     private Long customerId;
@@ -21,14 +20,6 @@ public class Order {
 
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
-    }
-
-    public String getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(String supplier) {
-        this.supplier = supplier;
     }
 
     public Long getQuantity() {
@@ -55,8 +46,7 @@ public class Order {
         this.customerId = customerId;
     }
 
-    public Order(String supplier, Long quantity, String productName, Long customerId) {
-        this.supplier = supplier;
+    public Order(Long quantity, String productName, Long customerId) {
         this.quantity = quantity;
         this.productName = productName;
         this.customerId = customerId;
@@ -68,7 +58,6 @@ public class Order {
     public String toString() {
         return "Order{" +
                 "orderId=" + orderId +
-                ", supplier='" + supplier + '\'' +
                 ", quantity=" + quantity +
                 ", productName='" + productName + '\'' +
                 ", customerId=" + customerId +

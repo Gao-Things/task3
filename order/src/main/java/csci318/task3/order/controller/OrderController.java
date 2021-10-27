@@ -15,11 +15,10 @@ public class OrderController {
 
     @PostMapping("/orders")
     public Order saveOrder(@RequestBody Map<String, Object> req) throws Exception {
-        String supplier = String.valueOf(req.get("supplier"));
         Long quantity = Long.parseLong(String.valueOf(req.get("quantity")));
         String productName = String.valueOf(req.get("productName"));
         Long customerId = Long.parseLong(String.valueOf(req.get("customerId")));
-        Order order = new Order(supplier, quantity, productName, customerId);
+        Order order = new Order(quantity, productName, customerId);
         return orderService.saveOrder(order);
     }
 
