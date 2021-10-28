@@ -27,34 +27,34 @@ import java.util.function.Function;
 @Configuration
 public class OrderEventStreamProcessing {
 
-    public final static String BRAND_STATE_STORE = "brand-store";
+    public final static String PRODUCT_STATE_SOLD = "product-sold";
     public final static String EQUIPMENT_STATE_STORE = "equipment-store";
 
     @Bean
     public Function<KStream<?, OrderEvent>, KStream<String, ProductQuantity>> process() {
         return inputStream -> {
 
-            inputStream.map((k, v) -> {
-                String productName = v.getProductName();
-                long quantity = v.getQuantity();
-                ProductQuantity productQuantity = new ProductQuantity();
-                productQuantity.setProductName(productName);
-                productQuantity.setQuantity(quantity);
-                return KeyValue.pair(productName, productQuantity);
-            }).toTable(
-                    Materialized.<String, ProductQuantity, KeyValueStore<Bytes, byte[]>>as(EQUIPMENT_STATE_STORE).
-                            withKeySerde(Serdes.String()).
-                            // a custom value serde for this state store
-                                    withValueSerde(productSerde())
-            );
+//            KTable<String, ProductQuantity> productQuantityKTable1 = inputStream.map((k, v) -> {
+//                String productName = v.getProductName();
+//                long quantity = v.getQuantity();
+//                ProductQuantity productQuantity = new ProductQuantity();
+//                productQuantity.setProductName(productName);
+//                productQuantity.setQuantity(quantity);
+//                return KeyValue.pair(productName, productQuantity);
+//            }).toTable(
+//                    Materialized.<String, ProductQuantity, KeyValueStore<Bytes, byte[]>>as(EQUIPMENT_STATE_STORE).
+//                            withKeySerde(Serdes.String()).
+//                            // a custom value serde for this state store
+//                                    withValueSerde(productSerde())
+//            );
 
 
             KTable<String, Long> productQuantityKTable = inputStream.
-                    mapValues(OrderEvent::getProductName).
-                    groupBy((keyIgnored, value) -> value).
+                    map(( k, OrderEvent) -> new KeyValue<String, Long>(OrderEvent.getProductName(), OrderEvent.getQuantity())).
+                    groupByKey().
                     aggregate(
                             ()-> 0L,
-                            (k,v,agg) -> 5L + agg,
+                            (k,v,agg) -> v + agg,
                             Materialized.<String, Long, KeyValueStore<Bytes,byte[]>>as("c152")
                                     .withKeySerde(Serdes.String())
                                     .withValueSerde(Serdes.Long())
@@ -69,12 +69,12 @@ public class OrderEventStreamProcessing {
         };
     }
 
-    public Serde<ProductQuantity> productSerde() {
-        final JsonSerde<ProductQuantity> productJsonSerde = new JsonSerde<>();
-        Map<String, Object> configProps = new HashMap<>();
-        configProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "csci318.task3.bi.model.ProductQuantity");
-        configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        productJsonSerde.configure(configProps, false);
-        return productJsonSerde;
-    }
+//    public Serde<ProductQuantity> productSerde() {
+//        final JsonSerde<ProductQuantity> productJsonSerde = new JsonSerde<>();
+//        Map<String, Object> configProps = new HashMap<>();
+//        configProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "csci318.task3.bi.model.ProductQuantity");
+//        configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+//        productJsonSerde.configure(configProps, false);
+//        return productJsonSerde;
+//    }
 }

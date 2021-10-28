@@ -34,7 +34,7 @@ public class OrderInteractiveQuery {
     }
 
     private ReadOnlyKeyValueStore<String, Long> getOrderEventInfo() {
-        return this.interactiveQueryService.getQueryableStore(OrderEventStreamProcessing.BRAND_STATE_STORE,
+        return this.interactiveQueryService.getQueryableStore(OrderEventStreamProcessing.PRODUCT_STATE_SOLD,
                 QueryableStoreTypes.keyValueStore());
     }
 
