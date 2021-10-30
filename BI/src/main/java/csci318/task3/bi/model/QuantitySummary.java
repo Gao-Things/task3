@@ -3,17 +3,17 @@ package csci318.task3.bi.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
-public class ProductQuantity {
+public class QuantitySummary {
 
     private String productName;
     private long quantity;
 
-    public ProductQuantity(String productName, long quantity) {
+    public QuantitySummary(String productName, long quantity) {
         this.productName = productName;
         this.quantity = quantity;
     }
 
-    public ProductQuantity() {
+    public QuantitySummary() {
     }
 
     public String getProductName() {

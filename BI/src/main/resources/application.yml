@@ -23,4 +23,4 @@ spring.cloud.stream.kafka.streams.bindings:
         default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
         default.value.serde: org.springframework.kafka.support.serializer.JsonSerde
         spring.json.trusted.packages: '*'
-        spring.json.value.default.type: csci318.task3.bi.model.ProductQuantity
+        spring.json.value.default.type: csci318.task3.bi.model.QuantitySummary

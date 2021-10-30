@@ -58,10 +58,9 @@ public class OrderService implements OrderServiceInterface {
                 orderEvent.setQuantity(order.getQuantity());
                 orderEvent.setPrice(price);
                 streamBridge.send("OrderEvent", orderEvent);
-                return orderRepository.save(order);
-            }
-        }
-        return null;
+            } else throw new RuntimeException("Product is invalid");
+        } else throw new RuntimeException("Customer is invalid");
+        return orderRepository.save(order);
     }
 
     @Override
